@@ -13,7 +13,6 @@ kubectl apply -f .infrastructure/mysql-initdb.yml
 echo "Applying Secrets"
 kubectl apply -f .infrastructure/app-secret.yml
 kubectl apply -f .infrastructure/mysql-secret.yml
-kubectl apply -f .infrastructure/db-connection-secret.yml
 
 echo "Applying Persistent Volumes"
 kubectl apply -f .infrastructure/pv.yml

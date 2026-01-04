@@ -20,6 +20,8 @@ spec:
       containers:
         - name: todoapp
           image: ikulyk404/todoapp:3.0.0
+
+          # ---- Volume mounts ----
           volumeMounts:
             - name: data
               mountPath: /app/data
@@ -29,6 +31,8 @@ spec:
             - name: app-config-volume
               mountPath: /app/configs
               readOnly: true
+
+          # ---- Resources ----
           resources:
             requests:
               memory: "256Mi"
@@ -36,17 +40,21 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "150m"
+
+          # ---- Environment variables ----
           env:
             - name: PYTHONUNBUFFERED
               valueFrom:
                 configMapKeyRef:
                   name: app-config
                   key: PYTHONUNBUFFERED
+            # Old SECRET_KEY (можно оставить если нужно)
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: app-secret
                   key: SECRET_KEY
+            # Database connection info from Secret
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -67,20 +75,27 @@ spec:
                 secretKeyRef:
                   name: app-secret
                   key: HOST
+
+          # ---- Ports ----
           ports:
             - containerPort: 8080
+
+          # ---- Probes ----
           livenessProbe:
             httpGet:
               path: /api/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 5
+
           readinessProbe:
             httpGet:
               path: /api/ready
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
+
+      # ---- Volumes ----
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -91,3 +106,4 @@ spec:
         - name: app-config-volume
           configMap:
             name: app-config
+

@@ -19,9 +19,10 @@ kubectl exec -n todoapp -it $(kubectl get pod -n todoapp -l app=todoapp -o jsonp
 kubectl exec -n todoapp -it $(kubectl get pod -n todoapp -l app=todoapp -o jsonpath='{.items[0].metadata.name}') -- cat /app/secrets/PASSWORD
 kubectl exec -n todoapp -it $(kubectl get pod -n todoapp -l app=todoapp -o jsonpath='{.items[0].metadata.name}') -- cat /app/secrets/HOST
 
-kubectl logs -n mateapp -l app=todoapp --tail=20
+kubectl logs -n todoapp -l app=todoapp --tail=20
 kubectl logs -n mateapp -l job-name -l cronjob-name --tail=20
 
 kubectl get pods -n mysql
 kubectl exec -n mysql -it mysql-0 -- ls /docker-entrypoint-initdb.d
-kubectl exec -n mysql -it mysql-0 -- mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "SHOW DATABASES;"
+kubectl exec -n mysql -it mysql-0 -- sh -c 'mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "SHOW DATABASES;"'
+
